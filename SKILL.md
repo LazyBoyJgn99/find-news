@@ -14,131 +14,15 @@ description: |
 
 ## 概述
 
-这个技能提供多引擎搜索能力，通过调用官方 API 实现快速搜索。**开箱即用，无需配置**。
+这个技能提供多引擎搜索能力，通过调用官方 API 实现快速搜索。**开箱即用，跨平台支持（Windows/Mac/Linux）**。
 
-## 快速开始
-
-直接使用即可，无需任何配置：
-
-```bash
-python3 scripts/search.py search "测试" -n 3
-```
-
-如果看到搜索结果，说明一切正常！
-
-## 搜索脚本使用
-
-### 位置
-
-`scripts/search.py`
-
-### 通用搜索 (search)
-
-```bash
-python3 scripts/search.py search "关键词" -s baidu -n 5 -c 0
-```
-
-参数说明：
-
-- `query` (必需): 搜索关键词
-- `-s, --service`: 搜索服务（对应 API 的 `search_service` 参数）
-  - `baidu` (默认): 百度搜索
-  - `google`: Google 搜索
-  - `bing`: Bing 搜索
-  - `duckduckgo`: DuckDuckGo
-  - `yahoo`: Yahoo 搜索
-  - `wechat`: 微信公众号
-  - `youtube`: YouTube
-  - `github`: GitHub
-  - `reddit`: Reddit
-  - `bilibili`: 哔哩哔哩
-- `-n, --max-results`: 返回结果数量（对应 API 的 `max_results` 参数，1-20，默认 **3**）
-- `-c, --crawl-results`: 爬取完整内容的结果数（对应 API 的 `crawl_results` 参数，0-10，默认 **0**，**仅在需要时设置**）
-  - `0`: 只返回搜索摘要（快速）
-  - `1-10`: 爬取完整页面内容（慢，成本高）
-
-### 新闻搜索 (news)
-
-```bash
-python3 scripts/search.py news "关键词" -s google -n 10 -c 0
-```
-
-参数说明：
-
-- `-s, --service`: 新闻服务（对应 API 的 `search_service` 参数）
-  - `google` (默认): Google News
-  - `bing`: Bing News
-  - `duckduckgo`: DuckDuckGo News
-  - `yahoo`: Yahoo News
-
-## 使用示例
-
-### 1. 快速搜索（推荐）
-
-```bash
-# 只获取搜索摘要（快速，0.5-2秒）
-python3 scripts/search.py search "人工智能" -s wechat -n 5
-```
-
-### 2. 深度内容抓取（慎用）
-
-```bash
-# 获取完整页面内容（慢，10-30秒/页，成本高）
-python3 scripts/search.py news "科技新闻" -s bing -n 5 -c 5
-```
-
-### 3. GitHub 代码搜索
-
-```bash
-python3 scripts/search.py search "react hooks" -s github -n 10
-```
-
-### 4. YouTube 视频搜索
-
-```bash
-python3 scripts/search.py search "tutorial" -s youtube -n 5
-```
-
-## 使用场景
-
-### 场景 1: 快速获取搜索摘要（默认，推荐）
-
-**用户**: "帮我搜索一下最新的 AI 新闻"
-**Agent**:
-
-```bash
-python3 scripts/search.py news "AI" -s google -n 5
-```
-
-→ 返回 5 条新闻标题和摘要（**快速，0.5秒，每条 10 积分**）
-
-### 场景 2: 深度内容抓取（仅在必要时使用）
-
-**用户**: "我需要这篇文章的完整内容"
-**Agent**:
-
-```bash
-python3 scripts/search.py search "文章标题" -n 1 -c 1
-```
-
-→ 返回完整页面内容（**慢，10-30秒，成本 10 积分**）
-
-### 场景 3: 多平台搜索
-
-**用户**: "在微信公众号和 B 站搜索'Python 教程'"
-**Agent**:
-
-```bash
-python3 scripts/search.py search "Python教程" -s wechat -n 5
-python3 scripts/search.py search "Python教程" -s bilibili -n 5
-```
-
-## API 详情
+## API 接口
 
 ### 搜索接口
 
-- **URL**: `POST http://36.151.144.35:3001/api/v1/search`
-- **认证**: `Bearer sk_test_a6f84bf78896f10b2d28aebd7857744c`
+**端点**: `POST http://36.151.144.35:3001/api/v1/search`
+
+**认证**: `Bearer sk_test_a6f84bf78896f10b2d28aebd7857744c`
 
 **请求参数**:
 
@@ -156,30 +40,161 @@ python3 scripts/search.py search "Python教程" -s bilibili -n 5
   - `bilibili`: 哔哩哔哩
 - `max_results` (number, 可选): 返回结果数量 (1-20, 默认 3)
 - `crawl_results` (number, 可选): 爬取完整内容的结果数 (0-10, 默认 0)
+  - `0`: 只返回搜索摘要（快速）
+  - `1-10`: 爬取完整页面内容（慢，成本高）
 
-**示例**:
+**请求示例**:
 
-```bash
-curl -s "http://36.151.144.35:3001/api/v1/search" \
-  -H "Authorization: Bearer sk_test_a6f84bf78896f10b2d28aebd7857744c" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "龙虾",
-    "search_service": "wechat",
-    "max_results": 3,
-    "crawl_results": 0
-  }'
+```json
+{
+  "query": "人工智能",
+  "search_service": "baidu",
+  "max_results": 5,
+  "crawl_results": 0
+}
+```
+
+**响应示例**:
+
+```json
+{
+  "results": [
+    {
+      "title": "搜索结果标题",
+      "url": "https://example.com",
+      "snippet": "搜索结果摘要...",
+      "content": "完整内容（仅当 crawl_results > 0 时）"
+    }
+  ],
+  "total": 5,
+  "cached": false
+}
 ```
 
 ### 新闻接口
 
-- **URL**: `POST http://36.151.144.35:3001/api/v1/news`
-- **认证**: `Bearer sk_test_a6f84bf78896f10b2d28aebd7857744c`
+**端点**: `POST http://36.151.144.35:3001/api/v1/news`
 
-### 定价
+**认证**: `Bearer sk_test_a6f84bf78896f10b2d28aebd7857744c`
 
-- 每个结果 10 积分
-- 缓存命中免费
+**请求参数**:
+
+- `query` (string, 必需): 搜索关键词
+- `search_service` (string, 可选): 新闻服务名称
+  - `google` (默认): Google News
+  - `bing`: Bing News
+  - `duckduckgo`: DuckDuckGo News
+  - `yahoo`: Yahoo News
+- `max_results` (number, 可选): 返回结果数量 (1-20, 默认 3)
+- `crawl_results` (number, 可选): 爬取完整内容的结果数 (0-10, 默认 0)
+
+**请求示例**:
+
+```json
+{
+  "query": "科技新闻",
+  "search_service": "google",
+  "max_results": 10,
+  "crawl_results": 0
+}
+```
+
+## 使用场景
+
+### 场景 1: 快速获取搜索摘要（默认，推荐）
+
+**用户**: "帮我搜索一下最新的 AI 新闻"
+
+**Agent 操作**: 发送 POST 请求到新闻接口
+
+```json
+{
+  "query": "AI",
+  "search_service": "google",
+  "max_results": 5,
+  "crawl_results": 0
+}
+```
+
+→ 返回 5 条新闻标题和摘要（**快速，0.5秒，每条 10 积分**）
+
+### 场景 2: 深度内容抓取（仅在必要时使用）
+
+**用户**: "我需要这篇文章的完整内容"
+
+**Agent 操作**: 发送 POST 请求到搜索接口
+
+```json
+{
+  "query": "文章标题",
+  "search_service": "baidu",
+  "max_results": 1,
+  "crawl_results": 1
+}
+```
+
+→ 返回完整页面内容（**慢，10-30秒，成本 10 积分**）
+
+### 场景 3: 多平台搜索
+
+**用户**: "在微信公众号和 B 站搜索'Python 教程'"
+
+**Agent 操作**: 发送两个 POST 请求
+
+请求 1 - 微信公众号:
+```json
+{
+  "query": "Python教程",
+  "search_service": "wechat",
+  "max_results": 5,
+  "crawl_results": 0
+}
+```
+
+请求 2 - 哔哩哔哩:
+```json
+{
+  "query": "Python教程",
+  "search_service": "bilibili",
+  "max_results": 5,
+  "crawl_results": 0
+}
+```
+
+### 场景 4: GitHub 代码搜索
+
+**用户**: "搜索 GitHub 上的 react hooks 相关项目"
+
+**Agent 操作**: 发送 POST 请求
+
+```json
+{
+  "query": "react hooks",
+  "search_service": "github",
+  "max_results": 10,
+  "crawl_results": 0
+}
+```
+
+### 场景 5: YouTube 视频搜索
+
+**用户**: "在 YouTube 上搜索编程教程"
+
+**Agent 操作**: 发送 POST 请求
+
+```json
+{
+  "query": "programming tutorial",
+  "search_service": "youtube",
+  "max_results": 5,
+  "crawl_results": 0
+}
+```
+
+## 定价
+
+- 每个搜索结果：10 积分
+- 缓存命中：免费（30 分钟内相同查询）
 - 相同查询 30 分钟内第二次调用免费
 
 ## ⚠️ 重要提示
@@ -197,25 +212,27 @@ curl -s "http://36.151.144.35:3001/api/v1/search" \
 
 ### 最佳实践
 
-1. **默认使用** `-n 3 -c 0`（快速获取摘要）
-2. **只有用户明确要求"完整内容"时** 才设置 `-c > 0`
+1. **默认使用** `max_results: 3, crawl_results: 0`（快速获取摘要）
+2. **只有用户明确要求"完整内容"时** 才设置 `crawl_results > 0`
 3. **搜索前** 先检查是否有缓存（相同查询 30 分钟内免费）
 4. **合理控制数量** `max_results` 不要设置过大，避免不必要的成本
 
 ## 注意事项
 
-1. 默认使用 `crawl_results=0` 以获得快速响应
+1. 默认使用 `crawl_results: 0` 以获得快速响应
 2. 设置 `crawl_results > 0` 会显著增加延迟（10-30秒/页）
 3. 注意控制请求频率，避免超出限流
 4. 相同查询 30 分钟内会使用缓存，免费且更快
+5. 所有请求必须在 Header 中包含 `Authorization: Bearer sk_test_a6f84bf78896f10b2d28aebd7857744c`
+6. Content-Type 必须设置为 `application/json`
 
-## 高级配置（可选）
+## 错误处理
 
-如果需要使用自己的 API 服务，可以设置环境变量：
+常见错误码：
 
-```bash
-export SEARCH_API_KEY="your_api_key_here"
-export SEARCH_API_BASE_URL="http://your-server:3000"
-```
+- `400`: 请求参数错误
+- `401`: 认证失败（API Key 无效）
+- `429`: 请求频率超限
+- `500`: 服务器内部错误
 
-脚本会优先使用环境变量中的配置。
+建议在请求失败时进行重试，最多重试 3 次。
