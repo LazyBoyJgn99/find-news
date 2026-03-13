@@ -14,34 +14,17 @@ description: |
 
 ## 概述
 
-这个技能提供多引擎搜索能力，通过调用本地 Search API 实现快速搜索。
+这个技能提供多引擎搜索能力，通过调用官方 API 实现快速搜索。**开箱即用，无需配置**。
 
 ## 快速开始
 
-### 前置条件
+直接使用即可，无需任何配置：
 
-1. **启动 Search API 服务**（在另一个终端）：
+```bash
+python3 scripts/search.py search "测试" -n 3
+```
 
-   ```bash
-   cd /path/to/search-api-server
-   npm start
-   # 默认监听在 http://localhost:3000
-   ```
-
-2. **设置环境变量**：
-
-   ```bash
-   export SEARCH_API_KEY="your_api_key_here"
-   # 可选：自定义 API 地址
-   export SEARCH_API_BASE_URL="http://localhost:3000"
-   ```
-
-3. **测试连接**：
-   ```bash
-   python3 scripts/search.py search "测试" -n 1
-   ```
-
-如果看到搜索结果，说明配置成功！
+如果看到搜索结果，说明一切正常！
 
 ## 搜索脚本使用
 
@@ -127,7 +110,7 @@ python3 scripts/search.py search "tutorial" -s youtube -n 5
 python3 scripts/search.py news "AI" -s google -n 5
 ```
 
-→ 返回 5 条新闻标题和摘要（**快速，0.5秒，每条 ¥0.10**）
+→ 返回 5 条新闻标题和摘要（**快速，0.5秒，每条 10 积分**）
 
 ### 场景 2: 深度内容抓取（仅在必要时使用）
 
@@ -138,7 +121,7 @@ python3 scripts/search.py news "AI" -s google -n 5
 python3 scripts/search.py search "文章标题" -n 1 -c 1
 ```
 
-→ 返回完整页面内容（**慢，10-30秒，成本 ¥0.10**）
+→ 返回完整页面内容（**慢，10-30秒，成本 10 积分**）
 
 ### 场景 3: 多平台搜索
 
@@ -154,8 +137,8 @@ python3 scripts/search.py search "Python教程" -s bilibili -n 5
 
 ### 搜索接口
 
-- **URL**: `POST http://localhost:3000/api/v1/search`
-- **认证**: `Bearer $SEARCH_API_KEY`
+- **URL**: `POST http://36.151.144.35:3001/api/v1/search`
+- **认证**: `Bearer sk_test_a6f84bf78896f10b2d28aebd7857744c`
 
 **请求参数**:
 
@@ -177,8 +160,8 @@ python3 scripts/search.py search "Python教程" -s bilibili -n 5
 **示例**:
 
 ```bash
-curl -s "http://localhost:3000/api/v1/search" \
-  -H "Authorization: Bearer $SEARCH_API_KEY" \
+curl -s "http://36.151.144.35:3001/api/v1/search" \
+  -H "Authorization: Bearer sk_test_a6f84bf78896f10b2d28aebd7857744c" \
   -H "Content-Type: application/json" \
   -d '{
     "query": "龙虾",
@@ -190,12 +173,12 @@ curl -s "http://localhost:3000/api/v1/search" \
 
 ### 新闻接口
 
-- **URL**: `POST http://localhost:3000/api/v1/news`
-- **认证**: `Bearer $SEARCH_API_KEY`
+- **URL**: `POST http://36.151.144.35:3001/api/v1/news`
+- **认证**: `Bearer sk_test_a6f84bf78896f10b2d28aebd7857744c`
 
 ### 定价
 
-- 每个结果 ¥0.10
+- 每个结果 10 积分
 - 缓存命中免费
 - 相同查询 30 分钟内第二次调用免费
 
@@ -208,7 +191,7 @@ curl -s "http://localhost:3000/api/v1/search" \
 
 ### 成本
 
-- 每个搜索结果：¥0.10
+- 每个搜索结果：10 积分
 - 缓存命中：免费（30 分钟内相同查询）
 - **建议**：优先使用摘要，只在必要时抓取完整内容
 
@@ -223,6 +206,16 @@ curl -s "http://localhost:3000/api/v1/search" \
 
 1. 默认使用 `crawl_results=0` 以获得快速响应
 2. 设置 `crawl_results > 0` 会显著增加延迟（10-30秒/页）
-3. 请妥善保管 API Key，**不要提交到 git 仓库**
-4. 注意控制请求频率，避免超出限流
-5. 如果服务未启动，脚本会自动检测并给出提示
+3. 注意控制请求频率，避免超出限流
+4. 相同查询 30 分钟内会使用缓存，免费且更快
+
+## 高级配置（可选）
+
+如果需要使用自己的 API 服务，可以设置环境变量：
+
+```bash
+export SEARCH_API_KEY="your_api_key_here"
+export SEARCH_API_BASE_URL="http://your-server:3000"
+```
+
+脚本会优先使用环境变量中的配置。

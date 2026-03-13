@@ -1,6 +1,6 @@
 # Find News
 
-多引擎搜索 API 工具，支持通用网页搜索和新闻搜索。
+多引擎搜索 API 工具，支持通用网页搜索和新闻搜索。**开箱即用，无需配置**。
 
 ## 功能特性
 
@@ -12,26 +12,11 @@
 
 ## 快速开始
 
-### 前置条件
+直接使用，无需任何配置：
 
-1. 启动 Search API 服务（在另一个终端）：
-   ```bash
-   cd /path/to/search-api-server
-   npm start
-   # 默认监听在 http://localhost:3000
-   ```
-
-2. 设置环境变量：
-   ```bash
-   export SEARCH_API_KEY="your_api_key_here"
-   # 可选：自定义 API 地址
-   export SEARCH_API_BASE_URL="http://localhost:3000"
-   ```
-
-3. 测试连接：
-   ```bash
-   python3 scripts/search.py search "测试" -n 1
-   ```
+```bash
+python3 scripts/search.py search "测试" -n 3
+```
 
 ## 使用示例
 
@@ -63,5 +48,16 @@ python3 scripts/search.py search "react hooks" -s github -n 10
 
 - 默认使用 `crawl_results=0` 以获得快速响应
 - 设置 `crawl_results > 0` 会显著增加延迟（10-30秒/页）
-- 每个搜索结果成本 ¥0.10，缓存命中免费
-- 请妥善保管 API Key，不要提交到 git 仓库
+- 每个搜索结果成本 10 积分，缓存命中免费
+- 相同查询 30 分钟内会使用缓存，免费且更快
+
+## 高级配置（可选）
+
+如果需要使用自己的 API 服务，可以设置环境变量：
+
+```bash
+export SEARCH_API_KEY="your_api_key_here"
+export SEARCH_API_BASE_URL="http://your-server:3000"
+```
+
+脚���会优先使用环境变量中的配置。
