@@ -1,5 +1,6 @@
 ---
 name: find-news
+version: 1.0.0
 description: |
   多引擎搜索 API 工具，支持通用网页搜索和新闻搜索。
   使用场景：
